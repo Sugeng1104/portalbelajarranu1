@@ -153,6 +153,73 @@ async function register(){
 
  try{
  let res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'register',user:u,pass:p,avatar:dataUser.avatar,jenjang:dataUser.jenjang,kelas:dataUser.kelas})});
+ 
+ // CEK RESPONSE AMAN
+ let text = await res.text();
+ let data;
+ try{
+   data = JSON.parse(text);
+ }catch{
+   throw new Error('Response bukan JSON: '+text);
+ }
+
+ if(data.status==='exist'){
+  resetBtn();
+  alert('Username sudah ada');
+  return;
+ }
+
+ if(data.status==='success'){
+  showSuccess();
+ }else{
+  throw new Error('Status tidak dikenali');
+ }
+
+ }catch(e){
+  console.error(e);
+  alert('Terjadi error koneksi / Apps Script belum benar');
+  resetBtn();
+ }
+}
+
+function resetBtn(){
+ let btn=document.getElementById('saveBtn');
+ btn.innerHTML='Simpan';
+ btn.classList.remove('loading');
+}
+
+function showSuccess(){
+ let status=document.getElementById('statusArea');
+ 
+ // SUARA SUKSES
+ let audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b1d0f.mp3?filename=success-1-6297.mp3');
+ audio.play();
+
+ // ANIMASI
+ status.innerHTML=`
+   <div class="success">✔</div>
+   <p style="color:#2ecc71;font-weight:bold">Akun Berhasil Dibuat</p>
+   <div class="confetti"></div>
+ `;
+
+ // CONFETTI SEDERHANA
+ for(let i=0;i<20;i++){
+   let c=document.createElement('div');
+   c.className='confetti-piece';
+   c.style.left=Math.random()*100+'%';
+   c.style.background=`hsl(${Math.random()*360},70%,60%)`;
+   c.style.animationDuration=(Math.random()*2+1)+'s';
+   status.appendChild(c);
+ }
+
+ setTimeout(()=>location.reload(),2000);
+}
+
+ btn.classList.add('loading');
+ btn.innerHTML='<div class="spinner"></div>';
+
+ try{
+ let res=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'register',user:u,pass:p,avatar:dataUser.avatar,jenjang:dataUser.jenjang,kelas:dataUser.kelas})});
  let data=await res.json();
 
  if(data.status==='exist'){
