@@ -16,6 +16,50 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none;dis
 .popup-content{background:white;padding:25px;border-radius:20px;width:90%;max-width:400px;text-align:center}
 .hidden{display:none}
 
+.avatar-item{
+ text-align:center;
+ cursor:pointer;
+ position:relative;
+}
+
+.avatar-item img{
+ width:80px;
+ height:80px;
+ border-radius:50%;
+ border:3px solid #4facfe;
+ object-fit:cover;
+}
+
+.avatar-item span{
+ position:absolute;
+ top:0;
+ right:5px;
+ background:#2ecc71;
+ color:white;
+ border-radius:50%;
+ width:22px;
+ height:22px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:14px;
+ display:none;
+}
+
+.avatar-item.active img{
+ border:4px solid #2ecc71;
+ transform:scale(1.1);
+}
+
+.avatar-item.active span{
+ display:flex;
+}
+
+.avatar-item p{
+ font-size:12px;
+ margin-top:5px;
+}
+
 /* DASHBOARD */
 .dashboard{
  display:none;
@@ -69,24 +113,28 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none;dis
 
     <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
       
-      <div onclick="nextJenjang('avatar1.png')" style="text-align:center;cursor:pointer;">
-        <img src="portalbelajarranu1/avatar1.png" style="width:80px;height:80px;border-radius:50%;border:3px solid #4facfe;">
-        <p style="font-size:12px;">Avatar 1</p>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')">
+        <img src="./portalbelajarranu1/avatar1.png">
+        <span>✔</span>
+        <p>Avatar 1</p>
       </div>
 
-      <div onclick="nextJenjang('avatar2.png')" style="text-align:center;cursor:pointer;">
-        <img src="portalbelajarranu1/avatar2.png" style="width:80px;height:80px;border-radius:50%;border:3px solid #4facfe;">
-        <p style="font-size:12px;">Avatar 2</p>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar2.png')">
+        <img src="./portalbelajarranu1/avatar2.png">
+        <span>✔</span>
+        <p>Avatar 2</p>
       </div>
 
-      <div onclick="nextJenjang('avatar3.png')" style="text-align:center;cursor:pointer;">
-        <img src="portalbelajarranu1/avatar3.png" style="width:80px;height:80px;border-radius:50%;border:3px solid #4facfe;">
-        <p style="font-size:12px;">Avatar 3</p>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar3.png')">
+        <img src="./portalbelajarranu1/avatar3.png">
+        <span>✔</span>
+        <p>Avatar 3</p>
       </div>
 
-      <div onclick="nextJenjang('avatar4.png')" style="text-align:center;cursor:pointer;">
-        <img src="portalbelajarranu1/avatar4.png" style="width:80px;height:80px;border-radius:50%;border:3px solid #4facfe;">
-        <p style="font-size:12px;">Avatar 4</p>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar4.png')">
+        <img src="./portalbelajarranu1/avatar4.png">
+        <span>✔</span>
+        <p>Avatar 4</p>
       </div>
 
     </div>
@@ -94,7 +142,7 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none;dis
   </div>
 </div>
 
-<!-- JENJANG
+<!-- JENJANG -->
 <div id="jenjangPopup" class="popup hidden">
   <div class="popup-content">
     <h3>Pilih Jenjang</h3>
@@ -143,6 +191,15 @@ window.onload = ()=>{
  }else{
    document.getElementById('avatarPopup').classList.remove('hidden');
  }
+}
+
+function selectAvatar(el,av){
+ document.querySelectorAll('.avatar-item').forEach(e=>e.classList.remove('active'));
+ el.classList.add('active');
+ dataUser.avatar = av;
+ setTimeout(()=>{
+   nextJenjang(av);
+ },300);
 }
 
 function nextJenjang(av){
