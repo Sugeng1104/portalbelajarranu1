@@ -66,10 +66,21 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none;dis
 <div id="avatarPopup" class="popup hidden">
   <div class="popup-content">
     <h3>Pilih Avatar</h3>
-    <div style="display:flex;justify-content:center;gap:15px;">
-      <img src="avatar/avatar1.png" width="80" onclick="nextJenjang('avatar1.png')">
-      <img src="avatar/avatar2.png" width="80" onclick="nextJenjang('avatar2.png')">
+
+    <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+      
+      <div onclick="nextJenjang('avatar1.png')" style="text-align:center;cursor:pointer;">
+        <img src="avatar/avatar1.png" style="width:80px;height:80px;border-radius:50%;border:3px solid #4facfe;">
+        <p style="margin-top:5px;font-size:12px;">Avatar 1</p>
+      </div>
+
+      <div onclick="nextJenjang('avatar2.png')" style="text-align:center;cursor:pointer;">
+        <img src="avatar/avatar2.png" style="width:80px;height:80px;border-radius:50%;border:3px solid #4facfe;">
+        <p style="margin-top:5px;font-size:12px;">Avatar 2</p>
+      </div>
+
     </div>
+
   </div>
 </div>
 
