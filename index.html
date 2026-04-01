@@ -175,23 +175,31 @@ async function register(){
  btn.disabled=true;
 
  try{
-  let res=await fetch(API_URL,{
-   method:'POST',
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({action:'register',user:u,pass:p,avatar:dataUser.avatar,jenjang:dataUser.jenjang,kelas:dataUser.kelas})
+  await fetch(API_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      action:'register',
+      user:u,
+      pass:p,
+      avatar:dataUser.avatar,
+      jenjang:dataUser.jenjang,
+      kelas:dataUser.kelas
+    })
   });
-
-  let data=await res.json();
-
-  if(data.status==='exist'){alert('Username sudah ada');reset();return;}
 
   status.innerHTML='<div class="success">✔</div><p>Berhasil</p>';
   setTimeout(()=>location.reload(),1500);
 
  }catch(e){
   alert('Gagal koneksi');
+  btn.innerHTML='Simpan';
+  btn.disabled=false;
+   alert('Gagal koneksi');
   reset();
  }
+}
 
  function reset(){
   btn.innerHTML='Simpan';
@@ -209,15 +217,13 @@ async function login(){
  let p=document.getElementById('loginPass').value;
 
  try{
-  let res=await fetch(API_URL,{
-   method:'POST',
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({action:'login',user:u,pass:p})
-  });
+ async function login(){
+ let u=document.getElementById('loginUser').value;
 
-  let data=await res.json();
-
-  if(data.status==='success'){
+ localStorage.setItem('login','true');
+ localStorage.setItem('user',u);
+ loadDashboard();
+}
    localStorage.setItem('login','true');
    localStorage.setItem('user',u);
    loadDashboard();
@@ -237,13 +243,12 @@ async function loadDashboard(){
 
  let user=localStorage.getItem('user');
 
- let res=await fetch(API_URL,{
+ await fetch(API_URL,{
   method:'POST',
+  mode:'no-cors',
   headers:{"Content-Type":"application/json"},
   body:JSON.stringify({action:'getUser',user:user})
- });
-
- let data=await res.json();
+});
 
  document.getElementById('userName').innerText=user;
  document.getElementById('userInfo').innerText=data.jenjang+' - Kelas '+data.kelas;
