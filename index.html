@@ -1,3 +1,4 @@
+ini isi html:
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -116,7 +117,6 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
 </div>
 
 <script>
-<script>
 const API_URL="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
 const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
 
@@ -176,25 +176,15 @@ async function register(){
  btn.disabled=true;
 
  try{
-  let formData=new FormData();
-  formData.append("action","register");
-  formData.append("user",u);
-  formData.append("pass",p);
-  formData.append("avatar",dataUser.avatar);
-  formData.append("jenjang",dataUser.jenjang);
-  formData.append("kelas",dataUser.kelas);
-
   let res=await fetch(API_URL,{
-    method:"POST",
-    body:formData
+   method:'POST',
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({action:'register',user:u,pass:p,avatar:dataUser.avatar,jenjang:dataUser.jenjang,kelas:dataUser.kelas})
   });
 
   let data=await res.json();
 
-  if(data.status==='exist'){
-    alert('Username sudah ada');
-    reset(); return;
-  }
+  if(data.status==='exist'){alert('Username sudah ada');reset();return;}
 
   status.innerHTML='<div class="success">✔</div><p>Berhasil</p>';
   setTimeout(()=>location.reload(),1500);
@@ -220,14 +210,10 @@ async function login(){
  let p=document.getElementById('loginPass').value;
 
  try{
-  let formData=new FormData();
-  formData.append("action","login");
-  formData.append("user",u);
-  formData.append("pass",p);
-
   let res=await fetch(API_URL,{
-    method:"POST",
-    body:formData
+   method:'POST',
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({action:'login',user:u,pass:p})
   });
 
   let data=await res.json();
@@ -252,13 +238,10 @@ async function loadDashboard(){
 
  let user=localStorage.getItem('user');
 
- let formData=new FormData();
- formData.append("action","getUser");
- formData.append("user",user);
-
  let res=await fetch(API_URL,{
-  method:"POST",
-  body:formData
+  method:'POST',
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({action:'getUser',user:user})
  });
 
  let data=await res.json();
@@ -268,9 +251,8 @@ async function loadDashboard(){
  document.getElementById('userAvatar').src=BASE_AVATAR+data.avatar;
 }
 
-function goSite(){window.location.href="https://sites.google.com";}
+function goSite(){window.location.href=REDIRECT_URL;}
 function logout(){localStorage.clear();location.reload();}
-</script>
 </script>
 
 </body>
