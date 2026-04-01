@@ -1,4 +1,3 @@
-ini isi html:
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -164,6 +163,7 @@ function nextKelas(j){
  document.getElementById('kelasPopup').classList.remove('hidden');
 }
 
+/* ================= REGISTER FIX ================= */
 async function register(){
  let btn=document.getElementById('saveBtn');
  let status=document.getElementById('statusArea');
@@ -176,15 +176,25 @@ async function register(){
  btn.disabled=true;
 
  try{
+  let formData=new FormData();
+  formData.append("action","register");
+  formData.append("user",u);
+  formData.append("pass",p);
+  formData.append("avatar",dataUser.avatar);
+  formData.append("jenjang",dataUser.jenjang);
+  formData.append("kelas",dataUser.kelas);
+
   let res=await fetch(API_URL,{
    method:'POST',
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({action:'register',user:u,pass:p,avatar:dataUser.avatar,jenjang:dataUser.jenjang,kelas:dataUser.kelas})
+   body:formData
   });
 
   let data=await res.json();
 
-  if(data.status==='exist'){alert('Username sudah ada');reset();return;}
+  if(data.status==='exist'){
+    alert('Username sudah ada');
+    reset(); return;
+  }
 
   status.innerHTML='<div class="success">✔</div><p>Berhasil</p>';
   setTimeout(()=>location.reload(),1500);
@@ -200,6 +210,7 @@ async function register(){
  }
 }
 
+/* ================= LOGIN FIX ================= */
 function showLogin(){
  hideAll();
  document.getElementById('loginPopup').classList.remove('hidden');
@@ -210,10 +221,14 @@ async function login(){
  let p=document.getElementById('loginPass').value;
 
  try{
+  let formData=new FormData();
+  formData.append("action","login");
+  formData.append("user",u);
+  formData.append("pass",p);
+
   let res=await fetch(API_URL,{
    method:'POST',
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({action:'login',user:u,pass:p})
+   body:formData
   });
 
   let data=await res.json();
@@ -231,6 +246,7 @@ async function login(){
  }
 }
 
+/* ================= DASHBOARD FIX ================= */
 async function loadDashboard(){
  hideAll();
  document.getElementById('home').style.display='none';
@@ -238,10 +254,13 @@ async function loadDashboard(){
 
  let user=localStorage.getItem('user');
 
+ let formData=new FormData();
+ formData.append("action","getUser");
+ formData.append("user",user);
+
  let res=await fetch(API_URL,{
   method:'POST',
-  headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({action:'getUser',user:user})
+  body:formData
  });
 
  let data=await res.json();
@@ -251,7 +270,7 @@ async function loadDashboard(){
  document.getElementById('userAvatar').src=BASE_AVATAR+data.avatar;
 }
 
-function goSite(){window.location.href=REDIRECT_URL;}
+function goSite(){window.location.href="https://sites.google.com";}
 function logout(){localStorage.clear();location.reload();}
 </script>
 
