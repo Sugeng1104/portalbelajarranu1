@@ -117,12 +117,12 @@ const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
 
 let dataUser={avatar:'',jenjang:'',kelas:''};
 
-// ✅ UPDATE LOGIC
+// ✅ LOGIC FINAL (tidak munculkan popup jika sudah punya akun)
 window.onload=()=>{
   if(localStorage.getItem('login')==='true'){
     loadDashboard();
   }else if(localStorage.getItem('registered')==='true'){
-    showLogin();
+    document.getElementById('home').style.display='block';
   }else{
     showAwal();
   }
@@ -168,7 +168,7 @@ function nextKelas(j){
  document.getElementById('kelasPopup').classList.remove('hidden');
 }
 
-// ✅ REGISTER UPDATE
+// ✅ REGISTER TANPA KEMBALI KE POPUP
 async function register(){
  let btn=document.getElementById('saveBtn');
  let status=document.getElementById('statusArea');
@@ -202,11 +202,10 @@ async function register(){
   status.innerHTML='<div class="success">✔</div><p>Berhasil</p>';
 
   localStorage.setItem('registered','true');
-  localStorage.setItem('lastUser', u);
 
   setTimeout(()=>{
     hideAll();
-    showLogin();
+    document.getElementById('home').style.display='block';
   },1500);
 
  }catch(e){
@@ -216,15 +215,9 @@ async function register(){
  }
 }
 
-// ✅ LOGIN UPDATE (auto isi username)
 function showLogin(){
  hideAll();
  document.getElementById('loginPopup').classList.remove('hidden');
-
- let lastUser = localStorage.getItem('lastUser');
- if(lastUser){
-   document.getElementById('loginUser').value = lastUser;
- }
 }
 
 async function login(){
