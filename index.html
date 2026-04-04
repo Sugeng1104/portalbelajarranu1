@@ -121,7 +121,16 @@ const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
 
 let dataUser={avatar:'',jenjang:'',kelas:''};
 
-window.onload=()=>{showAwal();}
+/* ================= AWAL ================= */
+window.onload=()=>{
+ if(localStorage.getItem('login')==='true'){
+   loadDashboard();
+ }else if(localStorage.getItem('sudahDaftar')==='true'){
+   hideAll(); // tidak tampil popup
+ }else{
+   showAwal(); // pertama kali tampil popup
+ }
+};
 
 function showAwal(){
  hideAll();
@@ -132,6 +141,7 @@ function hideAll(){
  document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'));
 }
 
+/* ================= PILIH ================= */
 function selectAvatar(el,av){
  document.querySelectorAll('.avatar-item').forEach(e=>e.classList.remove('active'));
  el.classList.add('active');
@@ -163,7 +173,7 @@ function nextKelas(j){
  document.getElementById('kelasPopup').classList.remove('hidden');
 }
 
-/* ================= REGISTER FIX ================= */
+/* ================= REGISTER ================= */
 async function register(){
  let btn=document.getElementById('saveBtn');
  let status=document.getElementById('statusArea');
@@ -184,11 +194,7 @@ async function register(){
   formData.append("jenjang",dataUser.jenjang);
   formData.append("kelas",dataUser.kelas);
 
-  let res=await fetch(API_URL,{
-   method:'POST',
-   body:formData
-  });
-
+  let res=await fetch(API_URL,{method:'POST',body:formData});
   let data=await res.json();
 
   if(data.status==='exist'){
@@ -196,7 +202,11 @@ async function register(){
     reset(); return;
   }
 
+  /* 🔥 SIMPAN STATUS SUDAH DAFTAR */
+  localStorage.setItem('sudahDaftar','true');
+
   status.innerHTML='<div class="success">✔</div><p>Berhasil</p>';
+
   setTimeout(()=>location.reload(),1500);
 
  }catch(e){
@@ -210,7 +220,7 @@ async function register(){
  }
 }
 
-/* ================= LOGIN FIX ================= */
+/* ================= LOGIN ================= */
 function showLogin(){
  hideAll();
  document.getElementById('loginPopup').classList.remove('hidden');
@@ -226,16 +236,13 @@ async function login(){
   formData.append("user",u);
   formData.append("pass",p);
 
-  let res=await fetch(API_URL,{
-   method:'POST',
-   body:formData
-  });
-
+  let res=await fetch(API_URL,{method:'POST',body:formData});
   let data=await res.json();
 
   if(data.status==='success'){
    localStorage.setItem('login','true');
    localStorage.setItem('user',u);
+   localStorage.setItem('sudahDaftar','true');
    loadDashboard();
   }else{
    alert('Login gagal');
@@ -246,7 +253,7 @@ async function login(){
  }
 }
 
-/* ================= DASHBOARD FIX ================= */
+/* ================= DASHBOARD ================= */
 async function loadDashboard(){
  hideAll();
  document.getElementById('home').style.display='none';
@@ -258,11 +265,7 @@ async function loadDashboard(){
  formData.append("action","getUser");
  formData.append("user",user);
 
- let res=await fetch(API_URL,{
-  method:'POST',
-  body:formData
- });
-
+ let res=await fetch(API_URL,{method:'POST',body:formData});
  let data=await res.json();
 
  document.getElementById('userName').innerText=user;
@@ -270,6 +273,7 @@ async function loadDashboard(){
  document.getElementById('userAvatar').src=BASE_AVATAR+data.avatar;
 }
 
+/* ================= LAINNYA ================= */
 function goSite(){window.location.href="https://sites.google.com";}
 function logout(){localStorage.clear();location.reload();}
 </script>
