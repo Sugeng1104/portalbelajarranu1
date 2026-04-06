@@ -9,6 +9,11 @@
 body{margin:0;font-family:Poppins, sans-serif;background:linear-gradient(135deg,#4facfe,#00f2fe)}
 .container{text-align:center;padding:30px;color:white}
 .logo{width:140px}
+.home-avatar{
+ width:90px;height:90px;border-radius:50%;
+ border:4px solid white;margin:10px auto;
+ display:none;
+}
 
 /* BUTTON */
 button{
@@ -40,7 +45,16 @@ button{
 }
 .popup-content{
  background:white;padding:20px;border-radius:20px;text-align:center;
+ position:relative;
 }
+
+/* ❌ CLOSE */
+.close{
+ position:absolute;top:10px;right:15px;
+ cursor:pointer;font-size:20px;font-weight:bold;
+}
+
+/* HIDDEN */
 .hidden{display:none}
 
 /* AVATAR */
@@ -69,6 +83,8 @@ button{
 
 <!-- HOME -->
 <div id="home" class="container">
+  <img src="SiTeek.png" class="logo">
+  <img id="homeAvatar" class="home-avatar">
   <h2>Portal Belajar</h2>
   <button class="btn-login" onclick="showLogin()">Login</button>
 </div>
@@ -81,9 +97,10 @@ button{
   <button class="btn-masuk" onclick="login()">Masuk</button>
 </div>
 
-<!-- POPUP AVATAR -->
+<!-- AVATAR -->
 <div id="avatarPopup" class="popup hidden">
 <div class="popup-content">
+<div class="close" onclick="hideAll()">✖</div>
 <h3>Pilih Avatar</h3>
 
 <div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')">
@@ -104,6 +121,7 @@ button{
 <!-- JENJANG -->
 <div id="jenjangPopup" class="popup hidden">
 <div class="popup-content">
+<div class="close" onclick="hideAll()">✖</div>
 <h3>Pilih Jenjang</h3>
 <button onclick="nextKelas('PAUD')">PAUD</button>
 <button onclick="nextKelas('SD')">SD</button>
@@ -113,6 +131,7 @@ button{
 <!-- KELAS -->
 <div id="kelasPopup" class="popup hidden">
 <div class="popup-content">
+<div class="close" onclick="hideAll()">✖</div>
 <h3>Pilih Kelas</h3>
 <div id="kelasList"></div>
 </div>
@@ -121,6 +140,7 @@ button{
 <!-- REGISTER -->
 <div id="registerPopup" class="popup hidden">
 <div class="popup-content">
+<div class="close" onclick="hideAll()">✖</div>
 <h3>Buat Akun</h3>
 <input id="regUser" placeholder="Username">
 <input id="regPass" type="password" placeholder="Password">
@@ -134,7 +154,7 @@ const BASE="https://sugeng1104.github.io/portalbelajarranu1/";
 
 let dataUser={};
 
-// ================= INIT =================
+// INIT
 window.onload=async()=>{
  let userLocal=localStorage.getItem("user");
 
@@ -146,23 +166,22 @@ window.onload=async()=>{
   let r=await fetch(API,{method:'POST',body:f});
   let d=await r.json();
 
-  if(!d || !d.avatar){
-    showAwal(); // akun terhapus
+  if(d && d.avatar){
+    document.getElementById("homeAvatar").src=BASE+d.avatar;
+    document.getElementById("homeAvatar").style.display="block";
+  }else{
+    showAwal();
   }
  }else{
-  showAwal(); // belum pernah daftar
+  showAwal();
  }
 }
 
-// ================= POPUP =================
-function showAwal(){
- document.getElementById('avatarPopup').classList.remove('hidden');
-}
-function hideAll(){
- document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'));
-}
+// POPUP
+function showAwal(){document.getElementById('avatarPopup').classList.remove('hidden')}
+function hideAll(){document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'))}
 
-// ================= FLOW =================
+// FLOW
 function selectAvatar(el,av){
  document.querySelectorAll('.avatar-item').forEach(e=>e.classList.remove('active'));
  el.classList.add('active');
@@ -179,7 +198,7 @@ function nextKelas(j){
  dataUser.jenjang=j;
  hideAll();
 
- let list=document.getElementById('kelasList');
+ let list=kelasList;
  list.innerHTML='';
 
  (j==='PAUD'?['A','B']:[1,2,3,4,5,6]).forEach(k=>{
@@ -188,15 +207,15 @@ function nextKelas(j){
   b.onclick=()=>{
     dataUser.kelas=k;
     hideAll();
-    document.getElementById('registerPopup').classList.remove('hidden');
+    registerPopup.classList.remove('hidden');
   };
   list.appendChild(b);
  });
 
- document.getElementById('kelasPopup').classList.remove('hidden');
+ kelasPopup.classList.remove('hidden');
 }
 
-// ================= REGISTER =================
+// REGISTER
 async function register(){
  let f=new FormData();
  f.append("action","register");
@@ -211,11 +230,12 @@ async function register(){
 
  if(d.status==='success'){
   localStorage.setItem("user", regUser.value);
-  hideAll(); // kembali ke HOME tanpa popup
+  hideAll();
+  location.reload();
  }
 }
 
-// ================= LOGIN =================
+// LOGIN
 function showLogin(){
  home.style.display='none';
  loginPage.style.display='block';
@@ -235,7 +255,7 @@ async function login(){
  }
 }
 
-// ================= DASHBOARD =================
+// DASHBOARD
 async function loadDashboard(user){
  home.style.display='none';
  loginPage.style.display='none';
@@ -256,12 +276,10 @@ async function loadDashboard(user){
  }
 }
 
-// ================= GO =================
 function go(){
  location.href="https://sites.google.com/guru.sd.belajar.id/kelas-4-upt-sdn-ranuklindungan/halaman-muka";
 }
 
-// ================= LOGOUT =================
 function logout(){
  localStorage.removeItem("user");
  location.reload();
