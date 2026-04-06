@@ -44,17 +44,22 @@ input{
  width:260px;display:block;margin:120px auto 20px;
 }
 
-/* POPUP REGISTER */
+/* POPUP */
 .popup{
  position:fixed;top:0;left:0;width:100%;height:100%;
  background:rgba(0,0,0,.6);
  display:flex;justify-content:center;align-items:center;
 }
 .popup-content{
- background:white;padding:25px;border-radius:20px;
+ background:white;padding:20px;border-radius:20px;
  width:90%;max-width:350px;text-align:center;
 }
-.hidden{display:none;}
+.hidden{display:none}
+
+/* AVATAR */
+.avatar-item{display:inline-block;margin:10px;cursor:pointer}
+.avatar-item img{width:70px;height:70px;border-radius:50%;border:3px solid #ccc}
+.avatar-item.active img{border:4px solid #2ecc71}
 </style>
 </head>
 
@@ -84,10 +89,40 @@ input{
   <button class="btn-masuk" onclick="login()">Masuk</button>
 </div>
 
-<!-- 🔥 POPUP REGISTER -->
+<!-- POPUP AVATAR -->
+<div id="avatarPopup" class="popup hidden">
+  <div class="popup-content">
+    <h3>Pilih Avatar</h3>
+    <div>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar1.png"></div>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar2.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar2.png"></div>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar3.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar3.png"></div>
+      <div class="avatar-item" onclick="selectAvatar(this,'avatar4.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar4.png"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP JENJANG -->
+<div id="jenjangPopup" class="popup hidden">
+  <div class="popup-content">
+    <h3>Pilih Jenjang</h3>
+    <button onclick="nextKelas('PAUD')">PAUD</button>
+    <button onclick="nextKelas('SD')">SD</button>
+  </div>
+</div>
+
+<!-- POPUP KELAS -->
+<div id="kelasPopup" class="popup hidden">
+  <div class="popup-content">
+    <h3>Pilih Kelas</h3>
+    <div id="kelasList"></div>
+  </div>
+</div>
+
+<!-- POPUP REGISTER -->
 <div id="registerPopup" class="popup hidden">
   <div class="popup-content">
-    <h3>Buat Akun Baru</h3>
+    <h3>Buat Akun</h3>
     <input id="regUser" placeholder="Username">
     <input id="regPass" type="password" placeholder="Password">
     <button class="btn-go" onclick="register()">Daftar</button>
@@ -97,6 +132,8 @@ input{
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
 const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
+
+let dataUser={avatar:'',jenjang:'',kelas:''};
 
 // ================= CEK USER =================
 window.onload=async ()=>{
@@ -108,57 +145,57 @@ window.onload=async ()=>{
     formData.append("action","getUser");
     formData.append("user",user);
 
-    try{
-      let res=await fetch(API_URL,{method:'POST',body:formData});
-      let data=await res.json();
+    let res=await fetch(API_URL,{method:'POST',body:formData});
+    let data=await res.json();
 
-      if(data && data.avatar){
-        loadDashboard(user);
-      }else{
-        resetToAwal();
-      }
-    }catch(e){
-      resetToAwal();
+    if(data && data.avatar){
+      loadDashboard(user);
+    }else{
+      showAwal();
     }
   }else{
     document.getElementById('home').style.display='block';
   }
 }
 
-// ================= RESET (POPUP LANGSUNG) =================
-function resetToAwal(){
-  window.history.replaceState({}, document.title, "index.html");
-
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('home').style.display='block';
-
-  // 🔥 tampilkan popup register otomatis
-  document.getElementById('registerPopup').classList.remove('hidden');
+// ================= FLOW REGISTER =================
+function showAwal(){
+ hideAll();
+ document.getElementById('avatarPopup').classList.remove('hidden');
 }
 
-// ================= LOGIN PAGE =================
-function showLoginPage(){
- document.getElementById('home').style.display='none';
- document.getElementById('loginPage').style.display='block';
+function hideAll(){
+ document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'));
 }
 
-// ================= AVATAR LOGIN =================
-async function loadAvatarPreview(){
- let u=document.getElementById('loginUser').value;
- if(u.length<2)return;
+function selectAvatar(el,av){
+ document.querySelectorAll('.avatar-item').forEach(e=>e.classList.remove('active'));
+ el.classList.add('active');
+ dataUser.avatar=av;
+ setTimeout(()=>nextJenjang(),300);
+}
 
- let formData=new FormData();
- formData.append("action","getUser");
- formData.append("user",u);
+function nextJenjang(){
+ hideAll();
+ document.getElementById('jenjangPopup').classList.remove('hidden');
+}
 
- try{
-  let res=await fetch(API_URL,{method:'POST',body:formData});
-  let data=await res.json();
-  if(data.avatar){
-    document.getElementById('loginAvatar').src=BASE_AVATAR+data.avatar;
-  }
- }catch(e){}
+function nextKelas(j){
+ dataUser.jenjang=j;
+ hideAll();
+ let list=document.getElementById('kelasList');
+ list.innerHTML='';
+ (j==='PAUD'?['A','B']:[1,2,3,4,5,6]).forEach(k=>{
+  let b=document.createElement('button');
+  b.innerText=k;
+  b.onclick=()=>{
+    dataUser.kelas=k;
+    hideAll();
+    document.getElementById('registerPopup').classList.remove('hidden');
+  };
+  list.appendChild(b);
+ });
+ document.getElementById('kelasPopup').classList.remove('hidden');
 }
 
 // ================= REGISTER =================
@@ -170,21 +207,24 @@ async function register(){
  formData.append("action","register");
  formData.append("user",u);
  formData.append("pass",p);
- formData.append("avatar","avatar1.png");
- formData.append("jenjang","SD");
- formData.append("kelas","4");
+ formData.append("avatar",dataUser.avatar);
+ formData.append("jenjang",dataUser.jenjang);
+ formData.append("kelas",dataUser.kelas);
 
  let res=await fetch(API_URL,{method:'POST',body:formData});
  let data=await res.json();
 
  if(data.status==='success'){
    window.location.href="?user="+u;
- }else{
-   alert("Username sudah ada");
  }
 }
 
 // ================= LOGIN =================
+function showLoginPage(){
+ document.getElementById('home').style.display='none';
+ document.getElementById('loginPage').style.display='block';
+}
+
 async function login(){
  let u=document.getElementById('loginUser').value;
  let p=document.getElementById('loginPass').value;
@@ -199,8 +239,6 @@ async function login(){
 
  if(data.status==='success'){
    window.location.href="?user="+u;
- }else{
-   alert("Login gagal");
  }
 }
 
@@ -219,10 +257,8 @@ async function loadDashboard(user){
 
  document.getElementById('userAvatar').src=BASE_AVATAR+data.avatar;
 
- let kelasContent=document.getElementById('kelasContent');
-
  if(data.kelas==4){
-   kelasContent.innerHTML=`
+   document.getElementById('kelasContent').innerHTML=`
      <img src="https://sugeng1104.github.io/portalbelajarranu1/kelas4.png" class="kelas-img">
      <button class="btn-go" onclick="goKelas4()">GO</button>
    `;
