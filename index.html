@@ -26,6 +26,19 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
 .card{background:white;color:#333;padding:15px;margin:15px;border-radius:15px}
 
 .login-page{display:none;text-align:center;padding:40px;color:white}
+
+/* tambahan kelas 4 */
+.kelas-img{width:260px;display:block;margin:30px auto}
+.btn-go{
+  margin-top:10px;
+  padding:15px;
+  width:150px;
+  border:none;
+  border-radius:12px;
+  background:#006400;
+  color:white;
+  font-weight:bold;
+}
 </style>
 </head>
 
@@ -40,6 +53,9 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
   <div class="card">
     <button class="default" onclick="logout()">Logout</button>
   </div>
+
+  <!-- AREA TAMBAHAN -->
+  <div id="kelasArea"></div>
 </div>
 
 <!-- HOME -->
@@ -57,7 +73,7 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
   <button class="default" onclick="login()">Masuk</button>
 </div>
 
-<!-- POPUP REGISTER (HANYA USER BARU) -->
+<!-- POPUP REGISTER -->
 <div id="registerPopup" class="popup hidden">
 <div class="popup-content">
 <h3>Buat Akun</h3>
@@ -71,7 +87,7 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
 const API_URL="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
 const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
 
-// ================= CEK USER DARI URL =================
+// ================= CEK USER =================
 window.onload=()=>{
   const urlParams = new URLSearchParams(window.location.search);
   const user = urlParams.get('user');
@@ -125,6 +141,19 @@ async function loadDashboard(user){
  document.getElementById('userName').innerText=user;
  document.getElementById('userInfo').innerText=data.jenjang+" - Kelas "+data.kelas;
  document.getElementById('userAvatar').src=BASE_AVATAR+data.avatar;
+
+ // 🔥 KHUSUS KELAS 4
+ if(data.kelas == 4){
+   document.getElementById('kelasArea').innerHTML = `
+     <img src="https://i.imgur.com/your-image.png" class="kelas-img">
+     <button class="btn-go" onclick="goKelas4()">GO</button>
+   `;
+ }
+}
+
+// ================= GO KELAS 4 =================
+function goKelas4(){
+ window.location.href="https://sites.google.com/guru.sd.belajar.id/kelas-4-upt-sdn-ranuklindungan/halaman-muka";
 }
 
 // ================= LOGOUT =================
