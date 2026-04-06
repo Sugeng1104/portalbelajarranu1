@@ -11,18 +11,53 @@ body{font-family:'Poppins',sans-serif;margin:0;background:linear-gradient(135deg
 .container{text-align:center;padding:30px 15px;color:white}
 .logo{width:140px}
 
-button{padding:14px;margin:10px auto;border:none;border-radius:15px;width:90%;display:block;font-weight:600}
-button.default{background:#fff;color:#3498db}
+/* ================= BUTTON ================= */
+button{
+ padding:14px;
+ margin:10px auto;
+ border:none;
+ border-radius:12px;
+ width:260px;
+ display:block;
+ font-weight:600;
+ cursor:pointer;
+ transition:0.2s;
+}
 
-input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
+.btn-login{background:#ff8c00;color:white;}
+.btn-masuk{background:#3498db;color:white;}
+.btn-go{background:#006400;color:white;}
+.logout-btn{
+ background:red;
+ color:white;
+ border:none;
+ padding:8px 12px;
+ border-radius:10px;
+ cursor:pointer;
+ transition:0.2s;
+}
 
-/* LOGIN PAGE */
+button:hover{opacity:0.9;}
+button:active{
+ transform:scale(0.95);
+ box-shadow:inset 0 3px 5px rgba(0,0,0,0.3);
+}
+
+input{
+ width:260px;
+ padding:14px;
+ margin:10px auto;
+ border-radius:12px;
+ border:none;
+ display:block;
+}
+
+/* ================= LOGIN ================= */
 .login-page{display:none;text-align:center;padding:40px;color:white}
 
-/* DASHBOARD */
+/* ================= DASHBOARD ================= */
 .dashboard{display:none;text-align:center;color:white;position:relative}
 
-/* TOP BAR */
 .top-bar{
  position:absolute;
  top:10px;
@@ -39,29 +74,10 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
  border:2px solid white;
 }
 
-.logout-btn{
- background:red;
- color:white;
- border:none;
- padding:8px 12px;
- border-radius:10px;
-}
-
-/* KELAS */
 .kelas-img{
  width:260px;
  display:block;
  margin:120px auto 20px;
-}
-
-.btn-go{
- background:#006400;
- color:white;
- padding:12px 20px;
- border:none;
- border-radius:12px;
- display:block;
- margin:auto;
 }
 </style>
 </head>
@@ -84,22 +100,22 @@ input{width:90%;padding:14px;margin:10px auto;border-radius:15px;border:none}
 <div id="home" class="container">
   <img src="SiTeek.png" class="logo">
   <h2>Portal Belajar</h2>
-  <button class="default" onclick="showLoginPage()">Login</button>
+  <button class="btn-login" onclick="showLoginPage()">Login</button>
 </div>
 
-<!-- LOGIN FULL -->
+<!-- LOGIN PAGE -->
 <div id="loginPage" class="login-page">
   <h2>Login</h2>
   <input id="loginUser" placeholder="Username">
   <input id="loginPass" type="password" placeholder="Password">
-  <button class="default" onclick="login()">Masuk</button>
+  <button class="btn-masuk" onclick="login()">Masuk</button>
 </div>
 
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
 const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
 
-// ================= CEK URL =================
+// ================= CEK USER =================
 window.onload=()=>{
   const urlParams = new URLSearchParams(window.location.search);
   const user = urlParams.get('user');
@@ -154,7 +170,6 @@ async function loadDashboard(user){
 
  let kelasContent = document.getElementById('kelasContent');
 
- // ================= LOGIC PER KELAS =================
  if(data.kelas == 4){
    kelasContent.innerHTML = `
      <img src="https://sugeng1104.github.io/portalbelajarranu1/kelas4.png" class="kelas-img">
