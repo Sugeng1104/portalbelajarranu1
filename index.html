@@ -4,62 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Belajar</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Poppins',sans-serif;margin:0;background:linear-gradient(135deg,#4facfe,#00f2fe)}
+body{margin:0;font-family:sans-serif;background:linear-gradient(135deg,#4facfe,#00f2fe)}
+
+/* HOME */
 .container{text-align:center;padding:30px;color:white}
 .logo{width:140px}
 
 /* BUTTON */
-button{
- padding:14px;margin:10px auto;border:none;border-radius:12px;
- width:260px;display:block;font-weight:600;cursor:pointer;
-}
-.btn-login{background:#ff8c00;color:white;}
-.btn-masuk{background:#3498db;color:white;}
-.btn-go{background:#006400;color:white;}
-.logout-btn{background:red;color:white;padding:8px 12px;border-radius:10px;}
-
-input{
- width:260px;padding:14px;margin:10px auto;border-radius:12px;border:none;display:block;
-}
+button{width:260px;padding:14px;margin:10px auto;border:none;border-radius:12px;display:block;cursor:pointer}
+.btn-login{background:orange;color:white}
+.btn-masuk{background:#3498db;color:white}
+.btn-go{background:#006400;color:white}
+.logout-btn{background:red;color:white;padding:8px 12px;border-radius:10px}
 
 /* LOGIN */
 .login-page{display:none;text-align:center;padding:40px;color:white}
-.login-avatar{
- width:100px;height:100px;border-radius:50%;
- margin:20px auto;border:4px solid white;
-}
+.login-avatar{width:100px;height:100px;border-radius:50%;margin:20px auto;border:4px solid white}
 
 /* DASHBOARD */
 .dashboard{display:none;text-align:center;color:white;position:relative}
-.top-bar{
- position:absolute;top:10px;right:10px;display:flex;gap:10px;
-}
-.avatar-top{
- width:40px;height:40px;border-radius:50%;border:2px solid white;
-}
-.kelas-img{
- width:260px;display:block;margin:120px auto 20px;
-}
+.top-bar{position:absolute;top:10px;right:10px;display:flex;gap:10px}
+.avatar-top{width:40px;height:40px;border-radius:50%;border:2px solid white}
+.kelas-img{width:260px;margin:120px auto 20px}
 
 /* POPUP */
-.popup{
- position:fixed;top:0;left:0;width:100%;height:100%;
- background:rgba(0,0,0,.6);
- display:flex;justify-content:center;align-items:center;
-}
-.popup-content{
- background:white;padding:20px;border-radius:20px;
- width:90%;max-width:350px;text-align:center;
-}
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center}
+.popup-content{background:white;padding:20px;border-radius:20px;text-align:center}
 .hidden{display:none}
 
 /* AVATAR */
-.avatar-item{display:inline-block;margin:10px;cursor:pointer}
+.avatar-item{display:inline-block;margin:10px;cursor:pointer;position:relative}
 .avatar-item img{width:70px;height:70px;border-radius:50%;border:3px solid #ccc}
-.avatar-item.active img{border:4px solid #2ecc71}
+.avatar-item span{
+ position:absolute;top:0;right:5px;
+ background:#2ecc71;color:white;border-radius:50%;
+ width:20px;height:20px;display:none;justify-content:center;align-items:center;
+}
+.avatar-item.active img{border:4px solid #2ecc71;transform:scale(1.1)}
+.avatar-item.active span{display:flex}
 </style>
 </head>
 
@@ -76,97 +60,106 @@ input{
 
 <!-- HOME -->
 <div id="home" class="container">
-  <img src="SiTeek.png" class="logo">
   <h2>Portal Belajar</h2>
-  <button class="btn-login" onclick="showLoginPage()">Login</button>
+  <button class="btn-login" onclick="showLogin()">Login</button>
 </div>
 
 <!-- LOGIN -->
 <div id="loginPage" class="login-page">
   <img id="loginAvatar" class="login-avatar" src="https://via.placeholder.com/100">
-  <input id="loginUser" placeholder="Username" oninput="loadAvatarPreview()">
+  <input id="loginUser" placeholder="Username" oninput="loadAvatar()">
   <input id="loginPass" type="password" placeholder="Password">
   <button class="btn-masuk" onclick="login()">Masuk</button>
 </div>
 
-<!-- POPUP AVATAR -->
+<!-- AVATAR -->
 <div id="avatarPopup" class="popup hidden">
-  <div class="popup-content">
-    <h3>Pilih Avatar</h3>
-    <div>
-      <div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar1.png"></div>
-      <div class="avatar-item" onclick="selectAvatar(this,'avatar2.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar2.png"></div>
-      <div class="avatar-item" onclick="selectAvatar(this,'avatar3.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar3.png"></div>
-      <div class="avatar-item" onclick="selectAvatar(this,'avatar4.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar4.png"></div>
-    </div>
-  </div>
+<div class="popup-content">
+<h3>Pilih Avatar</h3>
+
+<div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')">
+<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar1.png">
+<span>✔</span>
 </div>
 
-<!-- POPUP JENJANG -->
+<div class="avatar-item" onclick="selectAvatar(this,'avatar2.png')">
+<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar2.png">
+<span>✔</span>
+</div>
+
+<div class="avatar-item" onclick="selectAvatar(this,'avatar3.png')">
+<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar3.png">
+<span>✔</span>
+</div>
+
+<div class="avatar-item" onclick="selectAvatar(this,'avatar4.png')">
+<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar4.png">
+<span>✔</span>
+</div>
+
+</div>
+</div>
+
+<!-- JENJANG -->
 <div id="jenjangPopup" class="popup hidden">
-  <div class="popup-content">
-    <h3>Pilih Jenjang</h3>
-    <button onclick="nextKelas('PAUD')">PAUD</button>
-    <button onclick="nextKelas('SD')">SD</button>
-  </div>
+<div class="popup-content">
+<h3>Pilih Jenjang</h3>
+<button onclick="nextKelas('SD')">SD</button>
+</div>
 </div>
 
-<!-- POPUP KELAS -->
+<!-- KELAS -->
 <div id="kelasPopup" class="popup hidden">
-  <div class="popup-content">
-    <h3>Pilih Kelas</h3>
-    <div id="kelasList"></div>
-  </div>
+<div class="popup-content">
+<h3>Pilih Kelas</h3>
+<div id="kelasList"></div>
+</div>
 </div>
 
-<!-- POPUP REGISTER -->
+<!-- REGISTER -->
 <div id="registerPopup" class="popup hidden">
-  <div class="popup-content">
-    <h3>Buat Akun</h3>
-    <input id="regUser" placeholder="Username">
-    <input id="regPass" type="password" placeholder="Password">
-    <button class="btn-go" onclick="register()">Daftar</button>
-  </div>
+<div class="popup-content">
+<h3>Buat Akun</h3>
+<input id="regUser" placeholder="Username">
+<input id="regPass" type="password" placeholder="Password">
+<button class="btn-go" onclick="register()">Daftar</button>
+</div>
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
-const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
+const API="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
+let dataUser={};
 
-let dataUser={avatar:'',jenjang:'',kelas:''};
+// 🔥 CEK USER
+window.onload=async()=>{
+ let user=new URLSearchParams(location.search).get('user');
 
-// ================= CEK USER =================
-window.onload=async ()=>{
-  const urlParams=new URLSearchParams(window.location.search);
-  const user=urlParams.get('user');
+ if(user){
+  let f=new FormData();
+  f.append("action","getUser");
+  f.append("user",user);
 
-  if(user){
-    let formData=new FormData();
-    formData.append("action","getUser");
-    formData.append("user",user);
+  let res=await fetch(API,{method:'POST',body:f});
+  let d=await res.json();
 
-    let res=await fetch(API_URL,{method:'POST',body:formData});
-    let data=await res.json();
-
-    if(data && data.avatar){
-      loadDashboard(user);
-    }else{
-      showAwal();
-    }
+  if(d.avatar){
+    loadDashboard(user);
   }else{
-    document.getElementById('home').style.display='block';
+    showAwal(); // 🔥 FIX
   }
+ }else{
+  showAwal(); // 🔥 FIX WAJIB
+ }
 }
 
-// ================= FLOW REGISTER =================
+// 🔥 TAMPILKAN POPUP AWAL
 function showAwal(){
- hideAll();
+ document.getElementById('home').style.display='none';
  document.getElementById('avatarPopup').classList.remove('hidden');
 }
 
-function hideAll(){
- document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'));
-}
+// FLOW
+function hideAll(){document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'));}
 
 function selectAvatar(el,av){
  document.querySelectorAll('.avatar-item').forEach(e=>e.classList.remove('active'));
@@ -183,9 +176,10 @@ function nextJenjang(){
 function nextKelas(j){
  dataUser.jenjang=j;
  hideAll();
+
  let list=document.getElementById('kelasList');
  list.innerHTML='';
- (j==='PAUD'?['A','B']:[1,2,3,4,5,6]).forEach(k=>{
+ [1,2,3,4,5,6].forEach(k=>{
   let b=document.createElement('button');
   b.innerText=k;
   b.onclick=()=>{
@@ -195,85 +189,69 @@ function nextKelas(j){
   };
   list.appendChild(b);
  });
+
  document.getElementById('kelasPopup').classList.remove('hidden');
 }
 
-// ================= REGISTER =================
+// REGISTER
 async function register(){
- let u=document.getElementById('regUser').value;
- let p=document.getElementById('regPass').value;
+ let f=new FormData();
+ f.append("action","register");
+ f.append("user",regUser.value);
+ f.append("pass",regPass.value);
+ f.append("avatar",dataUser.avatar);
+ f.append("jenjang",dataUser.jenjang);
+ f.append("kelas",dataUser.kelas);
 
- let formData=new FormData();
- formData.append("action","register");
- formData.append("user",u);
- formData.append("pass",p);
- formData.append("avatar",dataUser.avatar);
- formData.append("jenjang",dataUser.jenjang);
- formData.append("kelas",dataUser.kelas);
+ let r=await fetch(API,{method:'POST',body:f});
+ let d=await r.json();
 
- let res=await fetch(API_URL,{method:'POST',body:formData});
- let data=await res.json();
-
- if(data.status==='success'){
-   window.location.href="?user="+u;
+ if(d.status==='success'){
+  location.href="?user="+regUser.value;
  }
 }
 
-// ================= LOGIN =================
-function showLoginPage(){
- document.getElementById('home').style.display='none';
- document.getElementById('loginPage').style.display='block';
+// LOGIN
+function showLogin(){
+ home.style.display='none';
+ loginPage.style.display='block';
 }
 
 async function login(){
- let u=document.getElementById('loginUser').value;
- let p=document.getElementById('loginPass').value;
+ let f=new FormData();
+ f.append("action","login");
+ f.append("user",loginUser.value);
+ f.append("pass",loginPass.value);
 
- let formData=new FormData();
- formData.append("action","login");
- formData.append("user",u);
- formData.append("pass",p);
+ let r=await fetch(API,{method:'POST',body:f});
+ let d=await r.json();
 
- let res=await fetch(API_URL,{method:'POST',body:formData});
- let data=await res.json();
-
- if(data.status==='success'){
-   window.location.href="?user="+u;
+ if(d.status==='success'){
+  location.href="?user="+loginUser.value;
  }
 }
 
-// ================= DASHBOARD =================
+// DASHBOARD
 async function loadDashboard(user){
- document.getElementById('home').style.display='none';
- document.getElementById('loginPage').style.display='none';
  document.getElementById('dashboard').style.display='block';
 
- let formData=new FormData();
- formData.append("action","getUser");
- formData.append("user",user);
+ let f=new FormData();
+ f.append("action","getUser");
+ f.append("user",user);
 
- let res=await fetch(API_URL,{method:'POST',body:formData});
- let data=await res.json();
+ let r=await fetch(API,{method:'POST',body:f});
+ let d=await r.json();
 
- document.getElementById('userAvatar').src=BASE_AVATAR+data.avatar;
+ userAvatar.src="https://sugeng1104.github.io/portalbelajarranu1/"+d.avatar;
 
- if(data.kelas==4){
-   document.getElementById('kelasContent').innerHTML=`
-     <img src="https://sugeng1104.github.io/portalbelajarranu1/kelas4.png" class="kelas-img">
-     <button class="btn-go" onclick="goKelas4()">GO</button>
-   `;
+ if(d.kelas==4){
+  kelasContent.innerHTML=`<img src="https://sugeng1104.github.io/portalbelajarranu1/kelas4.png" class="kelas-img">
+  <button class="btn-go" onclick="go()">GO</button>`;
  }
 }
 
-// ================= GO =================
-function goKelas4(){
- window.location.href="https://sites.google.com/guru.sd.belajar.id/kelas-4-upt-sdn-ranuklindungan/halaman-muka";
-}
-
-// ================= LOGOUT =================
-function logout(){
- window.location.href="index.html";
-}
+function go(){location.href="https://sites.google.com/guru.sd.belajar.id/kelas-4-upt-sdn-ranuklindungan/halaman-muka"}
+function logout(){location.href="index.html"}
 </script>
 
 </body>
