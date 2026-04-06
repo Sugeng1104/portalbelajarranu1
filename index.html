@@ -8,7 +8,7 @@
 
 <style>
 body{font-family:'Poppins',sans-serif;margin:0;background:linear-gradient(135deg,#4facfe,#00f2fe)}
-.container{text-align:center;padding:30px 15px;color:white}
+.container{text-align:center;padding:30px;color:white}
 .logo{width:140px}
 
 /* BUTTON */
@@ -23,20 +23,15 @@ button{
  cursor:pointer;
  transition:0.2s;
 }
-
 .btn-login{background:#ff8c00;color:white;}
 .btn-masuk{background:#3498db;color:white;}
 .btn-go{background:#006400;color:white;}
-
 .logout-btn{
- background:red;
- color:white;
- border:none;
+ background:red;color:white;
  padding:8px 12px;
  border-radius:10px;
  cursor:pointer;
 }
-
 button:active{
  transform:scale(0.95);
  box-shadow:inset 0 3px 5px rgba(0,0,0,0.3);
@@ -51,37 +46,23 @@ input{
  display:block;
 }
 
-/* LOGIN PAGE */
+/* LOGIN */
 .login-page{display:none;text-align:center;padding:40px;color:white}
-
-/* AVATAR LOGIN */
 .login-avatar{
- width:100px;
- height:100px;
- border-radius:50%;
- margin:20px auto;
- display:block;
- border:4px solid white;
+ width:100px;height:100px;border-radius:50%;
+ margin:20px auto;border:4px solid white;
 }
 
 /* DASHBOARD */
 .dashboard{display:none;text-align:center;color:white;position:relative}
-
 .top-bar{
- position:absolute;
- top:10px;
- right:10px;
- display:flex;
- gap:10px;
+ position:absolute;top:10px;right:10px;
+ display:flex;gap:10px;
 }
-
 .avatar-top{
- width:40px;
- height:40px;
- border-radius:50%;
+ width:40px;height:40px;border-radius:50%;
  border:2px solid white;
 }
-
 .kelas-img{
  width:260px;
  display:block;
@@ -98,7 +79,6 @@ input{
     <img id="userAvatar" class="avatar-top">
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
-
   <div id="kelasContent"></div>
 </div>
 
@@ -109,15 +89,11 @@ input{
   <button class="btn-login" onclick="showLoginPage()">Login</button>
 </div>
 
-<!-- LOGIN PAGE -->
+<!-- LOGIN -->
 <div id="loginPage" class="login-page">
-
-  <!-- 🔥 AVATAR DINAMIS -->
   <img id="loginAvatar" class="login-avatar" src="https://via.placeholder.com/100">
-
   <input id="loginUser" placeholder="Username" oninput="loadAvatarPreview()">
   <input id="loginPass" type="password" placeholder="Password">
-
   <button class="btn-masuk" onclick="login()">Masuk</button>
 </div>
 
@@ -125,16 +101,43 @@ input{
 const API_URL="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
 const BASE_AVATAR="https://sugeng1104.github.io/portalbelajarranu1/";
 
-// ================= CEK URL =================
-window.onload=()=>{
+// ================= CEK USER + DETEKSI TERHAPUS =================
+window.onload=async ()=>{
   const urlParams = new URLSearchParams(window.location.search);
   const user = urlParams.get('user');
 
   if(user){
-    loadDashboard(user);
+    let formData=new FormData();
+    formData.append("action","getUser");
+    formData.append("user",user);
+
+    try{
+      let res=await fetch(API_URL,{method:'POST',body:formData});
+      let data=await res.json();
+
+      if(data && data.avatar){
+        loadDashboard(user);
+      }else{
+        resetToAwal();
+      }
+    }catch(e){
+      resetToAwal();
+    }
+
   }else{
     document.getElementById('home').style.display='block';
   }
+}
+
+// ================= RESET KE USER BARU =================
+function resetToAwal(){
+  alert("Akun tidak ditemukan, silakan daftar kembali");
+
+  window.history.replaceState({}, document.title, "index.html");
+
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('home').style.display='block';
 }
 
 // ================= LOGIN PAGE =================
@@ -143,11 +146,10 @@ function showLoginPage(){
  document.getElementById('loginPage').style.display='block';
 }
 
-// ================= LOAD AVATAR SAAT KETIK USERNAME =================
+// ================= LOAD AVATAR =================
 async function loadAvatarPreview(){
  let u=document.getElementById('loginUser').value;
-
- if(u.length < 2) return;
+ if(u.length<2)return;
 
  let formData=new FormData();
  formData.append("action","getUser");
@@ -158,7 +160,7 @@ async function loadAvatarPreview(){
   let data=await res.json();
 
   if(data.avatar){
-    document.getElementById('loginAvatar').src = BASE_AVATAR + data.avatar;
+    document.getElementById('loginAvatar').src=BASE_AVATAR+data.avatar;
   }
  }catch(e){}
 }
@@ -205,6 +207,8 @@ async function loadDashboard(user){
      <img src="https://sugeng1104.github.io/portalbelajarranu1/kelas4.png" class="kelas-img">
      <button class="btn-go" onclick="goKelas4()">GO</button>
    `;
+ }else{
+   kelasContent.innerHTML=`<h2>Kelas ${data.kelas}</h2>`;
  }
 }
 
