@@ -9,11 +9,7 @@
 body{margin:0;font-family:Poppins, sans-serif;background:linear-gradient(135deg,#4facfe,#00f2fe)}
 .container{text-align:center;padding:30px;color:white}
 .logo{width:140px}
-.home-avatar{
- width:90px;height:90px;border-radius:50%;
- border:4px solid white;margin:10px auto;
- display:none;
-}
+.home-avatar{width:90px;height:90px;border-radius:50%;border:4px solid white;margin:10px auto;display:none}
 
 /* BUTTON */
 button{
@@ -21,6 +17,7 @@ button{
  border:none;border-radius:12px;display:block;
  cursor:pointer;font-weight:600;
 }
+button:active{transform:scale(0.95);box-shadow:inset 0 3px 8px rgba(0,0,0,0.2)}
 .btn-login{background:orange;color:white}
 .btn-masuk{background:#3498db;color:white}
 .btn-go{background:#006400;color:white}
@@ -28,7 +25,8 @@ button{
 
 /* LOGIN */
 .login-page{display:none;text-align:center;padding:40px;color:white}
-.login-avatar{width:100px;height:100px;border-radius:50%;margin:20px auto;border:4px solid white}
+.login-row{display:flex;align-items:center;justify-content:center;gap:10px}
+.login-avatar-small{width:70px;height:70px;border-radius:50%;border:3px solid white}
 
 /* DASHBOARD */
 .dashboard{display:none;text-align:center;color:white;position:relative}
@@ -47,14 +45,7 @@ button{
  background:white;padding:20px;border-radius:20px;text-align:center;
  position:relative;
 }
-
-/* ❌ CLOSE */
-.close{
- position:absolute;top:10px;right:15px;
- cursor:pointer;font-size:20px;font-weight:bold;
-}
-
-/* HIDDEN */
+.close{position:absolute;top:10px;right:15px;cursor:pointer;font-size:20px}
 .hidden{display:none}
 
 /* AVATAR */
@@ -85,35 +76,33 @@ button{
 <div id="home" class="container">
   <img src="SiTeek.png" class="logo">
   <img id="homeAvatar" class="home-avatar">
+  <h3 id="homeName"></h3>
   <h2>Portal Belajar</h2>
   <button class="btn-login" onclick="showLogin()">Login</button>
 </div>
 
 <!-- LOGIN -->
 <div id="loginPage" class="login-page">
-  <img id="loginAvatar" class="login-avatar" src="https://via.placeholder.com/100">
-  <input id="loginUser" placeholder="Username" oninput="loadAvatar()">
-  <input id="loginPass" type="password" placeholder="Password">
+  <div class="login-row">
+    <img id="loginAvatar" class="login-avatar-small" src="https://via.placeholder.com/70">
+    <div>
+      <input id="loginUser" placeholder="Username" oninput="loadAvatarLogin()">
+      <input id="loginPass" type="password" placeholder="Password">
+    </div>
+  </div>
   <button class="btn-masuk" onclick="login()">Masuk</button>
 </div>
 
-<!-- AVATAR -->
+<!-- POPUP AVATAR -->
 <div id="avatarPopup" class="popup hidden">
 <div class="popup-content">
 <div class="close" onclick="hideAll()">✖</div>
 <h3>Pilih Avatar</h3>
 
-<div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')">
-<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar1.png"><span>✔</span></div>
-
-<div class="avatar-item" onclick="selectAvatar(this,'avatar2.png')">
-<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar2.png"><span>✔</span></div>
-
-<div class="avatar-item" onclick="selectAvatar(this,'avatar3.png')">
-<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar3.png"><span>✔</span></div>
-
-<div class="avatar-item" onclick="selectAvatar(this,'avatar4.png')">
-<img src="https://sugeng1104.github.io/portalbelajarranu1/avatar4.png"><span>✔</span></div>
+<div class="avatar-item" onclick="selectAvatar(this,'avatar1.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar1.png"><span>✔</span></div>
+<div class="avatar-item" onclick="selectAvatar(this,'avatar2.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar2.png"><span>✔</span></div>
+<div class="avatar-item" onclick="selectAvatar(this,'avatar3.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar3.png"><span>✔</span></div>
+<div class="avatar-item" onclick="selectAvatar(this,'avatar4.png')"><img src="https://sugeng1104.github.io/portalbelajarranu1/avatar4.png"><span>✔</span></div>
 
 </div>
 </div>
@@ -151,7 +140,6 @@ button{
 <script>
 const API="https://script.google.com/macros/s/AKfycbzLtnh1t_KgrNO9CABPGQv5D67LhR4joPD2BnHXr4EoyVL6cnZgiWnI99NN1h8lnQ-Yuw/exec";
 const BASE="https://sugeng1104.github.io/portalbelajarranu1/";
-
 let dataUser={};
 
 // INIT
@@ -167,8 +155,9 @@ window.onload=async()=>{
   let d=await r.json();
 
   if(d && d.avatar){
-    document.getElementById("homeAvatar").src=BASE+d.avatar;
-    document.getElementById("homeAvatar").style.display="block";
+    homeAvatar.src=BASE+d.avatar;
+    homeAvatar.style.display="block";
+    homeName.innerText="Halo, "+userLocal;
   }else{
     showAwal();
   }
@@ -178,7 +167,7 @@ window.onload=async()=>{
 }
 
 // POPUP
-function showAwal(){document.getElementById('avatarPopup').classList.remove('hidden')}
+function showAwal(){avatarPopup.classList.remove('hidden')}
 function hideAll(){document.querySelectorAll('.popup').forEach(p=>p.classList.add('hidden'))}
 
 // FLOW
@@ -191,15 +180,13 @@ function selectAvatar(el,av){
 
 function nextJenjang(){
  hideAll();
- document.getElementById('jenjangPopup').classList.remove('hidden');
+ jenjangPopup.classList.remove('hidden');
 }
 
 function nextKelas(j){
  dataUser.jenjang=j;
  hideAll();
-
- let list=kelasList;
- list.innerHTML='';
+ kelasList.innerHTML='';
 
  (j==='PAUD'?['A','B']:[1,2,3,4,5,6]).forEach(k=>{
   let b=document.createElement('button');
@@ -209,7 +196,7 @@ function nextKelas(j){
     hideAll();
     registerPopup.classList.remove('hidden');
   };
-  list.appendChild(b);
+  kelasList.appendChild(b);
  });
 
  kelasPopup.classList.remove('hidden');
@@ -239,6 +226,22 @@ async function register(){
 function showLogin(){
  home.style.display='none';
  loginPage.style.display='block';
+}
+
+async function loadAvatarLogin(){
+ let u=loginUser.value;
+ if(u.length<2)return;
+
+ let f=new FormData();
+ f.append("action","getUser");
+ f.append("user",u);
+
+ let r=await fetch(API,{method:'POST',body:f});
+ let d=await r.json();
+
+ if(d && d.avatar){
+  loginAvatar.src=BASE+d.avatar;
+ }
 }
 
 async function login(){
