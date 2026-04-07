@@ -6,17 +6,13 @@
 <title>Portal Belajar</title>
 
 <style>
-body{margin:0;font-family:Poppins, sans-serif;background:linear-gradient(135deg,#4facfe,#00f2fe)}
+body{margin:0;font-family:Poppins;background:linear-gradient(135deg,#4facfe,#00f2fe)}
 .container{text-align:center;padding:30px;color:white}
 .logo{width:140px}
 .home-avatar{width:90px;height:90px;border-radius:50%;border:4px solid white;margin:10px auto;display:none}
 
 /* BUTTON */
-button{
- width:260px;padding:14px;margin:10px auto;
- border:none;border-radius:12px;display:block;
- cursor:pointer;font-weight:600;
-}
+button{width:260px;padding:14px;margin:10px auto;border:none;border-radius:12px;display:block;cursor:pointer}
 button:active{transform:scale(0.95);box-shadow:inset 0 3px 8px rgba(0,0,0,0.2)}
 .btn-login{background:orange;color:white}
 .btn-masuk{background:#3498db;color:white}
@@ -35,62 +31,57 @@ button:active{transform:scale(0.95);box-shadow:inset 0 3px 8px rgba(0,0,0,0.2)}
 .kelas-img{width:260px;margin:120px auto 20px}
 
 /* POPUP */
-.popup{
- position:fixed;top:0;left:0;width:100%;height:100%;
- background:rgba(0,0,0,.6);
- display:flex;justify-content:center;align-items:center;
- z-index:999;
-}
-.popup-content{
- background:white;padding:20px;border-radius:20px;text-align:center;
- position:relative;
-}
-.close{position:absolute;top:10px;right:15px;cursor:pointer;font-size:20px}
+.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:center;z-index:999}
+.popup-content{background:white;padding:20px;border-radius:20px;text-align:center;position:relative}
+.close{position:absolute;top:10px;right:15px;cursor:pointer}
 .hidden{display:none}
 
 /* AVATAR */
 .avatar-item{display:inline-block;margin:10px;cursor:pointer;position:relative}
 .avatar-item img{width:70px;height:70px;border-radius:50%;border:3px solid #ccc}
-.avatar-item span{
- position:absolute;top:0;right:5px;
- background:#2ecc71;color:white;border-radius:50%;
- width:20px;height:20px;display:none;justify-content:center;align-items:center;
-}
+.avatar-item span{position:absolute;top:0;right:5px;background:#2ecc71;color:white;border-radius:50%;width:20px;height:20px;display:none;justify-content:center;align-items:center}
 .avatar-item.active img{border:4px solid #2ecc71;transform:scale(1.1)}
 .avatar-item.active span{display:flex}
+
+/* PASSWORD */
+.pass-wrap{position:relative;width:260px;margin:auto}
+.pass-wrap input{width:100%;padding:14px;border-radius:12px;border:none}
+.eye{position:absolute;right:35px;top:12px;cursor:pointer}
+.check{position:absolute;right:10px;top:12px;color:green;display:none}
+.info{color:red;font-size:12px}
 </style>
 </head>
 
 <body>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="dashboard">
-  <div class="top-bar">
-    <img id="userAvatar" class="avatar-top">
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-  <div id="kelasContent"></div>
-</div>
-
 <!-- HOME -->
 <div id="home" class="container">
-  <img src="SiTeek.png" class="logo">
-  <img id="homeAvatar" class="home-avatar">
-  <h3 id="homeName"></h3>
-  <h2>Portal Belajar</h2>
-  <button class="btn-login" onclick="showLogin()">Login</button>
+<img src="SiTeek.png" class="logo">
+<img id="homeAvatar" class="home-avatar">
+<h3 id="homeName"></h3>
+<h2>Portal Belajar</h2>
+<button class="btn-login" onclick="showLogin()">Login</button>
 </div>
 
 <!-- LOGIN -->
 <div id="loginPage" class="login-page">
-  <div class="login-row">
-    <img id="loginAvatar" class="login-avatar-small" src="https://via.placeholder.com/70">
-    <div>
-      <input id="loginUser" placeholder="Username" oninput="loadAvatarLogin()">
-      <input id="loginPass" type="password" placeholder="Password">
-    </div>
-  </div>
-  <button class="btn-masuk" onclick="login()">Masuk</button>
+<div class="login-row">
+<img id="loginAvatar" class="login-avatar-small" src="https://via.placeholder.com/70">
+<div>
+<input id="loginUser" placeholder="Username" oninput="loadAvatarLogin()">
+<input id="loginPass" type="password" placeholder="Password">
+</div>
+</div>
+<button class="btn-masuk" onclick="login()">Masuk</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard">
+<div class="top-bar">
+<img id="userAvatar" class="avatar-top">
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+<div id="kelasContent"></div>
 </div>
 
 <!-- POPUP AVATAR -->
@@ -130,9 +121,18 @@ button:active{transform:scale(0.95);box-shadow:inset 0 3px 8px rgba(0,0,0,0.2)}
 <div id="registerPopup" class="popup hidden">
 <div class="popup-content">
 <div class="close" onclick="hideAll()">✖</div>
+
 <h3>Buat Akun</h3>
 <input id="regUser" placeholder="Username">
-<input id="regPass" type="password" placeholder="Password">
+
+<div class="pass-wrap">
+<input id="regPass" type="password" placeholder="Password" oninput="checkPassword()">
+<span class="eye" onclick="togglePass()">👁</span>
+<span id="checkPass" class="check">✔</span>
+</div>
+
+<p id="passInfo" class="info"></p>
+
 <button class="btn-go" onclick="register()">Daftar</button>
 </div>
 </div>
@@ -144,26 +144,19 @@ let dataUser={};
 
 // INIT
 window.onload=async()=>{
- let userLocal=localStorage.getItem("user");
-
- if(userLocal){
+ let u=localStorage.getItem("user");
+ if(u){
   let f=new FormData();
   f.append("action","getUser");
-  f.append("user",userLocal);
-
+  f.append("user",u);
   let r=await fetch(API,{method:'POST',body:f});
   let d=await r.json();
-
   if(d && d.avatar){
-    homeAvatar.src=BASE+d.avatar;
-    homeAvatar.style.display="block";
-    homeName.innerText="Halo, "+userLocal;
-  }else{
-    showAwal();
-  }
- }else{
-  showAwal();
- }
+   homeAvatar.src=BASE+d.avatar;
+   homeAvatar.style.display="block";
+   homeName.innerText="Halo, "+u;
+  }else showAwal();
+ }else showAwal();
 }
 
 // POPUP
@@ -175,39 +168,63 @@ function selectAvatar(el,av){
  document.querySelectorAll('.avatar-item').forEach(e=>e.classList.remove('active'));
  el.classList.add('active');
  dataUser.avatar=av;
- setTimeout(()=>nextJenjang(),300);
-}
-
-function nextJenjang(){
- hideAll();
- jenjangPopup.classList.remove('hidden');
+ setTimeout(()=>jenjangPopup.classList.remove('hidden'),300);
+ avatarPopup.classList.add('hidden');
 }
 
 function nextKelas(j){
  dataUser.jenjang=j;
- hideAll();
  kelasList.innerHTML='';
-
  (j==='PAUD'?['A','B']:[1,2,3,4,5,6]).forEach(k=>{
   let b=document.createElement('button');
   b.innerText=k;
   b.onclick=()=>{
     dataUser.kelas=k;
-    hideAll();
+    kelasPopup.classList.add('hidden');
     registerPopup.classList.remove('hidden');
   };
   kelasList.appendChild(b);
  });
-
+ jenjangPopup.classList.add('hidden');
  kelasPopup.classList.remove('hidden');
+}
+
+// PASSWORD
+function checkPassword(){
+ let p=regPass.value;
+ let regex=/^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+
+ if(p===""){
+  passInfo.innerText="Password wajib diisi";
+  checkPass.style.display="none";
+  return false;
+ }
+ if(!regex.test(p)){
+  passInfo.innerText="Minimal 6 karakter, 1 huruf besar & 1 angka";
+  checkPass.style.display="none";
+  return false;
+ }
+ passInfo.innerText="";
+ checkPass.style.display="inline";
+ return true;
+}
+
+function togglePass(){
+ regPass.type = regPass.type==="password" ? "text":"password";
 }
 
 // REGISTER
 async function register(){
+ let u=regUser.value.trim();
+ let p=regPass.value.trim();
+
+ if(u===""){passInfo.innerText="Username wajib diisi";return;}
+ if(!checkPassword())return;
+
  let f=new FormData();
  f.append("action","register");
- f.append("user",regUser.value);
- f.append("pass",regPass.value);
+ f.append("user",u);
+ f.append("pass",p);
  f.append("avatar",dataUser.avatar);
  f.append("jenjang",dataUser.jenjang);
  f.append("kelas",dataUser.kelas);
@@ -216,9 +233,11 @@ async function register(){
  let d=await r.json();
 
  if(d.status==='success'){
-  localStorage.setItem("user", regUser.value);
+  localStorage.setItem("user",u);
   hideAll();
   location.reload();
+ }else{
+  passInfo.innerText="Username sudah digunakan";
  }
 }
 
@@ -235,13 +254,9 @@ async function loadAvatarLogin(){
  let f=new FormData();
  f.append("action","getUser");
  f.append("user",u);
-
  let r=await fetch(API,{method:'POST',body:f});
  let d=await r.json();
-
- if(d && d.avatar){
-  loginAvatar.src=BASE+d.avatar;
- }
+ if(d && d.avatar) loginAvatar.src=BASE+d.avatar;
 }
 
 async function login(){
@@ -253,9 +268,7 @@ async function login(){
  let r=await fetch(API,{method:'POST',body:f});
  let d=await r.json();
 
- if(d.status==='success'){
-  loadDashboard(loginUser.value);
- }
+ if(d.status==='success') loadDashboard(loginUser.value);
 }
 
 // DASHBOARD
